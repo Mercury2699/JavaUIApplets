@@ -112,9 +112,14 @@ public class FindFiles {
         for (File aFile : files){
             if (aFile.isFile()){
                 SearchFile(aFile);
-            } else {
+            } else if (aFile.isDirectory()){
+                if (!aFile.canRead()) {
+                    System.out.println("Cannot read the directory " + Directory + ": Permission Denied.");
+                    return;
+                }
                 System.out.println("Searching subdirectory: " + aFile.getName() + " ...");
-                if (aFile.listFiles() != null) SearchRecursive(aFile.listFiles());
+                File[] list = aFile.listFiles();
+                if (list != null) SearchRecursive(list);
             }
         }
     }
@@ -144,6 +149,10 @@ public class FindFiles {
 
             try {
                 File dir = new File(Directory);
+                if (!dir.canRead()) {
+                    System.out.println("Cannot read the directory " + Directory + ": Permission Denied.");
+                    System.exit(0);
+                }
                 File[] files = dir.listFiles();
                 if (files != null) {
                     if (Recursive) {
