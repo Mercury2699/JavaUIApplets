@@ -1,3 +1,4 @@
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.String;
@@ -5,7 +6,7 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 public class FindFiles {
-    static boolean RegEx = false, Recursive = false;
+    static boolean RegEx = false, Recursive = false, found = false;
     static String FileName = null, Directory = ".";
     static String [] Extension = null;
 
@@ -73,6 +74,34 @@ public class FindFiles {
         return arguments;
     }
 
+    public static void SearchFile(File aFile){
+        System.err.print(aFile.getName());
+        if (RegEx) {
+            Pattern p = Pattern.compile(FileName);
+            System.err.println(p.matcher(aFile.getName()).matches());
+            if (p.matcher(aFile.getName()).matches() && aFile.isFile()) {
+                System.out.println("Matched: " + aFile.getAbsolutePath());
+                found = true;
+            }
+        } else {
+            if (aFile.getName().equals(FileName) && aFile.isFile()) {
+                System.out.println("Found: " + aFile.getAbsolutePath());
+                found = true;
+            }
+        }
+    }
+
+    public static void SearchRecursive(File[] files){
+        for (File aFile : files){
+            if (aFile.isFile()){
+                SearchFile(aFile);
+            } else {
+                System.out.println("Searching subdirectory: " + aFile.getName() + " ...");
+                SearchRecursive(aFile.listFiles());
+            }
+        }
+    }
+
     public static void main(String[] args){
         if (args.length == 0){
             printHelp();
@@ -96,34 +125,30 @@ public class FindFiles {
                 }
             }
 
-            Boolean found = false;
             try {
                 File dir = new File(Directory);
                 File[] files = dir.listFiles();
-                System.err.println("Trying to find file named: " + FileName + " in " + Directory);
-                File search = new File(FileName);
-                if (!dir.exists() || !dir.isDirectory()){
-                    System.out.println(Directory + " is not a valid directory. ");
-                    System.exit(0);
-                }
-                for (File aFile : files) {
-                    System.err.print(aFile.getName());
-                    if (RegEx) {
-                        Pattern p =Pattern.compile(FileName);
-                        System.err.println(p.matcher(aFile.getName()).matches());
-                        if (p.matcher(aFile.getName()).matches() && aFile.isFile()) {
-                            System.out.println("Found: " + aFile.getAbsolutePath());
-                            found = true;
-                        }
-                    } else {
-                        if (aFile.getName().equals(FileName) && aFile.isFile()) {
-                            System.out.println("Found: " + aFile.getAbsolutePath());
-                            found = true;
-                        }
+                if (Recursive) {
+                    System.out.println("Searching in current directory... ");
+                    SearchRecursive(files);
+                } else {
+                    System.err.println("Trying to find file named: " + FileName + " in " + Directory);
+                    File search = new File(FileName);
+                    if (!dir.exists() || !dir.isDirectory()) {
+                        System.out.println(Directory + " is not a valid directory. ");
+                        System.exit(0);
+                    }
+                    for (File aFile : files) {
+                        SearchFile(aFile);
                     }
                 }
-                if (!found) System.out.print(FileName + " is not found in " + dir.getCanonicalPath());
-                if (Recursive) System.out.print("Recursively");
+                if (!found) {
+                    System.out.print(FileName + " is not ");
+                    if (RegEx) System.out.print("matched");
+                    else System.out.print("found");
+                    System.out.print(" in " + dir.getCanonicalPath());
+                    if (Recursive) System.out.print("Recursively");
+                }
             } catch (Exception ex){
                 System.out.println(ex.toString());
             }
