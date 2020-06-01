@@ -75,18 +75,35 @@ public class FindFiles {
     }
 
     public static void SearchFile(File aFile){
-        System.err.print(aFile.getName());
-        if (RegEx) {
+        String tgtFileName = aFile.getName();
+        if (RegEx){
             Pattern p = Pattern.compile(FileName);
-            System.err.println(p.matcher(aFile.getName()).matches());
-            if (p.matcher(aFile.getName()).matches() && aFile.isFile()) {
-                System.out.println("Matched: " + aFile.getAbsolutePath());
-                found = true;
+            if (Extension != null) {
+                for (String ext : Extension) {
+                    if (p.matcher(tgtFileName).matches() && aFile.isFile() && tgtFileName.endsWith(ext)) {
+                        System.out.println("Matched: " + aFile.getAbsolutePath());
+                        found = true;
+                    }
+                }
+            } else {
+                if (p.matcher(tgtFileName).matches() && aFile.isFile()) {
+                    System.out.println("Matched: " + aFile.getAbsolutePath());
+                    found = true;
+                }
             }
         } else {
-            if (aFile.getName().equals(FileName) && aFile.isFile()) {
-                System.out.println("Found: " + aFile.getAbsolutePath());
-                found = true;
+            if (Extension != null) {
+                for (String ext : Extension) {
+                    if (tgtFileName.equals(FileName + "." + ext) && aFile.isFile()) {
+                        System.out.println("Found: " + aFile.getAbsolutePath());
+                        found = true;
+                    }
+                }
+            } else {
+                if (tgtFileName.equals(FileName) && aFile.isFile()) {
+                    System.out.println("Found: " + aFile.getAbsolutePath());
+                    found = true;
+                }
             }
         }
     }
@@ -97,7 +114,7 @@ public class FindFiles {
                 SearchFile(aFile);
             } else {
                 System.out.println("Searching subdirectory: " + aFile.getName() + " ...");
-                SearchRecursive(aFile.listFiles());
+                if (aFile.listFiles() != null) SearchRecursive(aFile.listFiles());
             }
         }
     }
@@ -128,18 +145,20 @@ public class FindFiles {
             try {
                 File dir = new File(Directory);
                 File[] files = dir.listFiles();
-                if (Recursive) {
-                    System.out.println("Searching in current directory... ");
-                    SearchRecursive(files);
-                } else {
-                    System.err.println("Trying to find file named: " + FileName + " in " + Directory);
-                    File search = new File(FileName);
-                    if (!dir.exists() || !dir.isDirectory()) {
-                        System.out.println(Directory + " is not a valid directory. ");
-                        System.exit(0);
-                    }
-                    for (File aFile : files) {
-                        SearchFile(aFile);
+                if (files != null) {
+                    if (Recursive) {
+                        System.out.println("Searching in current directory... ");
+                        SearchRecursive(files);
+                    } else {
+                        System.out.println("Trying to find file named: " + FileName + " in " + Directory);
+                        File search = new File(FileName);
+                        if (!dir.exists() || !dir.isDirectory()) {
+                            System.out.println(Directory + " is not a valid directory. ");
+                            System.exit(0);
+                        }
+                        for (File aFile : files) {
+                            SearchFile(aFile);
+                        }
                     }
                 }
                 if (!found) {
