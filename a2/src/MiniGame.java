@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import javafx.util.Pair;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
@@ -45,7 +47,7 @@ public class MiniGame extends Application {
     Label live = new Label();
     Label score = new Label();
     Label remain = new Label();
-    ArrayList<AnimationTimer> enemyTimers;
+    ArrayList<Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>>> enemyList;
     Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(0), e -> genEnemy()),
             new KeyFrame(Duration.seconds(1), e -> genEnemy()),
@@ -89,7 +91,7 @@ public class MiniGame extends Application {
     }
 
     protected Pane initiate(){
-        enemyTimers = new ArrayList<AnimationTimer>();
+        enemyList = new ArrayList<Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>>>();
         background.setFitHeight(W_HEIGHT);
         background.setFitWidth(W_WIDTH);
         player.setX((float)1280/2-idle.getWidth()/2);
@@ -163,10 +165,13 @@ public class MiniGame extends Application {
                         if (playerLives < 1) {
                             halted = true;
                             timeline.stop();
-                            for (AnimationTimer enemyAT : enemyTimers) {
-                                enemyAT.stop();
+                            for (Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>> enemy : enemyList) {
+                                enemy.getValue().getKey().stop();
+                                enemy.getValue().getValue()[0].stop();
+                                enemy.getValue().getValue()[1].stop();
+                                canvas.getChildren().remove(enemy.getKey());
                             }
-                            enemyTimers.clear();
+                            enemyList.clear();
                             canvas.getChildren().clear();
                             lose();
                             return;
@@ -185,7 +190,9 @@ public class MiniGame extends Application {
             }
         });
         transition.play();
-        enemyTimers.add(enemyAT);
+        TranslateTransition[] transitions = {transition, stepBack};
+        enemyList.add(new Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>>
+                (enemy, new Pair<AnimationTimer, TranslateTransition[]>(enemyAT, transitions)));
         enemyAT.start();
         canvas.getChildren().add(enemy);
     }
@@ -205,11 +212,51 @@ public class MiniGame extends Application {
             transition.setByX((float)DEFAULT_VELOCITY*2/lev);
         }
         canvas.getChildren().add(fb);
+        AnimationTimer fireAT = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                for (Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>> enemy : enemyList){
+                    if (fb.getBoundsInParent().intersects(enemy.getKey().getBoundsInParent())) {
+                        canvas.getChildren().remove(fb);
+                        fb.setX(0);
+                        fb.setY(0);
+                        enemy.getKey().setX(0);
+                        enemy.getKey().setY(0);
+                        enemy.getValue().getKey().stop();
+                        enemy.getValue().getValue()[0].stop();
+                        enemy.getValue().getValue()[1].stop();
+                        canvas.getChildren().removeAll(enemy.getKey());
+                        scor++;
+                        remainingEnemies--;
+                        this.stop();
+                        MediaPlayer killsound = new MediaPlayer(new Media(new File("src/resources/sound/kill_sound.wav").toURI().toString()));
+                        killsound.play();
+                        break;
+                    }
+                }
+                if (remainingEnemies < 1){
+                    halted = true;
+                    timeline.stop();
+                    for (Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>> enemy : enemyList) {
+                        canvas.getChildren().remove(fb);
+                        enemy.getValue().getKey().stop();
+                        enemy.getValue().getValue()[0].stop();
+                        enemy.getValue().getValue()[1].stop();
+                        canvas.getChildren().removeAll(enemy.getKey());
+                    }
+                    enemyList.clear();
+                    canvas.getChildren().clear();
+                    win();
+                }
+            }
+        };
+        fireAT.start();
         transition.play();
         transition.setOnFinished(actionEvent -> {
             canvas.getChildren().remove(fb);
             scor--;
             score.setText("Score: " + scor);
+            fireAT.stop();
         });
     }
 
@@ -225,6 +272,7 @@ public class MiniGame extends Application {
     void lose(){
         canvas.getChildren().clear();
         initiate();
+        MediaPlayer lostsound = new MediaPlayer(new Media(new File("src/resources/sound/fail.wav").toURI().toString()));
         Pane lostScr = new Pane();
         lostScr.getChildren().add(background);
         Label ulost = new Label();
@@ -245,12 +293,14 @@ public class MiniGame extends Application {
                 mainStage.close();
                 playerLives = 3;
                 scor = 0;
+                remainingEnemies = 10;
                 mainStage.setScene(GenLevel(1));
                 mainStage.show();
             }
         });
         mainStage.setScene(lost);
         mainStage.show();
+        lostsound.play();
     }
 
     void win(){
@@ -276,8 +326,11 @@ public class MiniGame extends Application {
                 mainStage.close();
                 playerLives = 3;
                 scor = 0;
+                remainingEnemies = 10;
                 mainStage.setScene(GenLevel(1));
                 mainStage.show();
+            } else if (keyEvent.getCode() == KeyCode.ENTER){
+                goNextLevel();
             }
         });
         mainStage.setScene(won);
