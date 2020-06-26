@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,8 +59,7 @@ public class MiniGame extends Application {
             new KeyFrame(Duration.seconds(6), e -> genEnemy()),
             new KeyFrame(Duration.seconds(7), e -> genEnemy()),
             new KeyFrame(Duration.seconds(8), e -> genEnemy()),
-            new KeyFrame(Duration.seconds(9), e -> genEnemy()),
-            new KeyFrame(Duration.seconds(10), e -> genEnemy())
+            new KeyFrame(Duration.seconds(9), e -> genEnemy())
     );
 
     @Override
@@ -162,6 +162,7 @@ public class MiniGame extends Application {
                         }
                         transition.stop();
                         playerLives--;
+                        live.setText("Lives: "+playerLives);
                         if (playerLives < 1) {
                             halted = true;
                             timeline.stop();
@@ -177,7 +178,6 @@ public class MiniGame extends Application {
                             return;
                         }
                         stepBack.play();
-                        live.setText("Lives: " + playerLives);
                     }
                 }
 
@@ -202,7 +202,7 @@ public class MiniGame extends Application {
         fireSound.play();
         ImageView fb = new ImageView(new Image("./resources/img/fireball2.gif"));
         fb.setY(450);
-        TranslateTransition transition = new TranslateTransition(new Duration((float)1500/lev), fb);
+        TranslateTransition transition = new TranslateTransition(new Duration((float)3000/lev), fb);
         if (direction == 0){
             fb.setX(580);
             fb.setScaleX(-1);
@@ -227,10 +227,12 @@ public class MiniGame extends Application {
                         enemy.getValue().getValue()[1].stop();
                         canvas.getChildren().removeAll(enemy.getKey());
                         scor++;
+                        score.setText("Score: " + scor);
                         remainingEnemies--;
-                        this.stop();
+                        remain.setText("Remaining Enemies: "+ remainingEnemies);
                         MediaPlayer killsound = new MediaPlayer(new Media(new File("src/resources/sound/kill_sound.wav").toURI().toString()));
                         killsound.play();
+                        this.stop();
                         break;
                     }
                 }
@@ -262,8 +264,9 @@ public class MiniGame extends Application {
 
     void goNextLevel(){
         if (lev < 3){
-            mainStage.setScene(GenLevel(lev+1));
             remainingEnemies = 10;
+            remain.setText("Remaining Enemies: "+ remainingEnemies);
+            mainStage.setScene(GenLevel(lev+1));
         } else {
             win();
         }
@@ -275,13 +278,24 @@ public class MiniGame extends Application {
         MediaPlayer lostsound = new MediaPlayer(new Media(new File("src/resources/sound/fail.wav").toURI().toString()));
         Pane lostScr = new Pane();
         lostScr.getChildren().add(background);
-        Label ulost = new Label();
+        Label ulost = new Label("You Lost on level "+ lev +"!");
+        Label end = new Label("To end the game, press Q.");
+        end.setFont(new Font(42));
+        end.setTextFill(WHITE);
+        Label restart = new Label("To restart the game, press R.");
+        restart.setFont(new Font(42));
+        restart.setTextFill(WHITE);
         ulost.setFont(new Font(42));
         ulost.setTextFill(WHITE);
         ulost.setLayoutX(400);
         ulost.setLayoutY(300);
-        ulost.setText("You Lost on level "+ lev +"!");
+        restart.setLayoutX(300);
+        restart.setLayoutY(400);
+        end.setLayoutX(350);
+        end.setLayoutY(500);
         lostScr.getChildren().add(ulost);
+        lostScr.getChildren().add(restart);
+        lostScr.getChildren().add(end);
         Scene lost = new Scene(lostScr);
         lost.setOnKeyPressed(keyEvent -> {
             printEvent(keyEvent);
@@ -308,13 +322,34 @@ public class MiniGame extends Application {
         winsound.play();
         Pane winScr = new Pane();
         winScr.getChildren().add(background);
-        Label uwin = new Label();
+        Label uwin = new Label("You Won on level "+ lev +"!");
+        Label end = new Label("To end the game, press Q.");
+        end.setFont(new Font(42));
+        end.setTextFill(WHITE);
+        Label restart = new Label("To restart the game, press R.");
+        restart.setFont(new Font(42));
+        restart.setTextFill(WHITE);
+        Label continu = new Label("To continue the game, press ENTER.");
+        continu.setFont(new Font(42));
+        if (lev >= 3){
+            uwin.setText("You Won the whole Game!!!");
+            continu.setText("Press ENTER to go back to title.");
+        }
+        continu.setTextFill(WHITE);
         uwin.setFont(new Font(42));
         uwin.setTextFill(WHITE);
         uwin.setLayoutX(400);
-        uwin.setLayoutY(300);
-        uwin.setText("You Won on level "+ lev +"!");
+        uwin.setLayoutY(200);
+        continu.setLayoutX(300);
+        continu.setLayoutY(300);
+        restart.setLayoutX(300);
+        restart.setLayoutY(400);
+        end.setLayoutX(350);
+        end.setLayoutY(500);
         winScr.getChildren().add(uwin);
+        winScr.getChildren().add(continu);
+        winScr.getChildren().add(end);
+        winScr.getChildren().add(restart);
         Scene won = new Scene(winScr);
         won.setOnKeyPressed(keyEvent -> {
             printEvent(keyEvent);
@@ -330,13 +365,46 @@ public class MiniGame extends Application {
                 mainStage.setScene(GenLevel(1));
                 mainStage.show();
             } else if (keyEvent.getCode() == KeyCode.ENTER){
-                goNextLevel();
+                if (lev < 3) {
+                    goNextLevel();
+                } else {
+                    mainStage.close();
+                    playerLives = 3;
+                    scor = 0;
+                    remainingEnemies = 10;
+                    try{
+                        canvas = FXMLLoader.load(getClass().getResource("MiniGame.fxml"));
+                    } catch (Error | IOException e){
+                        System.out.println(e.toString());
+                    }
+                    Scene opening = new Scene(canvas);
+                    opening.setOnKeyPressed(e -> {
+                        printEvent(e);
+                        if (e.getCode() == KeyCode.Q){
+                            System.exit(0);
+                        } else if (e.getCode() == KeyCode.ENTER){
+                            mainStage.setScene(GenLevel(1));
+                            mainStage.show();
+                        } else if (e.getCode() == KeyCode.getKeyCode("1")){
+                            mainStage.setScene(GenLevel(1));
+                            mainStage.show();
+                        } else if (e.getCode() == KeyCode.getKeyCode("2")){
+                            mainStage.setScene(GenLevel(2));
+                            mainStage.show();
+                        } else if (e.getCode() == KeyCode.getKeyCode("3")){
+                            mainStage.setScene(GenLevel(3));
+                            mainStage.show();
+                        }
+                    });
+                    mainStage.setScene(opening);
+                    mainStage.show();
+                }
+
             }
         });
         mainStage.setScene(won);
         mainStage.show();
     }
-
 
     void printEvent(KeyEvent event) {
         System.out.println(
