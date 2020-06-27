@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
@@ -48,6 +49,8 @@ public class MiniGame extends Application {
     Label live = new Label();
     Label score = new Label();
     Label remain = new Label();
+    MediaPlayer winsound = new MediaPlayer(new Media(new File("src/resources/sound/won.mp3").toURI().toString()));
+    MediaPlayer lostsound = new MediaPlayer(new Media(new File("src/resources/sound/fail.wav").toURI().toString()));
     ArrayList<Pair<ImageView,Pair<AnimationTimer, TranslateTransition[]>>> enemyList;
     Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(0), e -> genEnemy()),
@@ -275,7 +278,6 @@ public class MiniGame extends Application {
     void lose(){
         canvas.getChildren().clear();
         initiate();
-        MediaPlayer lostsound = new MediaPlayer(new Media(new File("src/resources/sound/fail.wav").toURI().toString()));
         Pane lostScr = new Pane();
         lostScr.getChildren().add(background);
         Label ulost = new Label("You Lost on level "+ lev +"!");
@@ -318,8 +320,6 @@ public class MiniGame extends Application {
     }
 
     void win(){
-        MediaPlayer winsound = new MediaPlayer(new Media(new File("src/resources/sound/won.mp3").toURI().toString()));
-        winsound.play();
         Pane winScr = new Pane();
         winScr.getChildren().add(background);
         Label uwin = new Label("You Won on level "+ lev +"!");
@@ -404,6 +404,7 @@ public class MiniGame extends Application {
         });
         mainStage.setScene(won);
         mainStage.show();
+        winsound.play();
     }
 
     void printEvent(KeyEvent event) {
