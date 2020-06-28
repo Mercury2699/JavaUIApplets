@@ -7,3 +7,4 @@ MacBookPro13,2
 Note:
 I have implemented the sound effect for Winning screen, but due to some unkown reason discussed in Piazza, the "won.mp3" sound does not get played on my machine when testing. 
 
+You may need to change the VM options when running because I hard coded my JavaFX library path. 
