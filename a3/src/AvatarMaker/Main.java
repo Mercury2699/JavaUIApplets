@@ -10,8 +10,8 @@ public class Main extends Application {
     @Override
     public void start(Stage s) {
         Model m = new Model();
-        c = new Controller(m);
-        Scene Main = new Scene(c.getViewer());
+        c = new Controller(m, s);
+        Scene Main = c.getViewer();
         s.setScene(Main);
         s.setHeight(800);
         s.setWidth(1200);

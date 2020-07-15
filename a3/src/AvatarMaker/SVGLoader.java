@@ -1,5 +1,6 @@
 package AvatarMaker;
 
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
@@ -16,7 +17,6 @@ import java.util.regex.Pattern;
 public class SVGLoader {
     public Group loadSVG(String svgFileName) {
         Group container = new Group();
-
         for (String path : getPaths(svgFileName)) {
             if (path.contains("translate")) {
                 Pattern p = Pattern.compile("[-]?[0-9]+[.]?[0-9]*");
@@ -28,6 +28,7 @@ public class SVGLoader {
             } else {
                 SVGPath svgPath = new SVGPath();
                 svgPath.setContent(path);
+                svgPath.setCursor(Cursor.HAND);
                 svgPath.setFill(Color.color(Math.random(), Math.random(), Math.random()));
                 container.getChildren().add(svgPath);
             }

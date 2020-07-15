@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
@@ -13,10 +15,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
+
 <HBox fx:id="roothbox" minHeight="400.0" minWidth="800.0" prefHeight="400.0" prefWidth="800.0"
-      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="AvatarMaker.Controller">
     <children>
-        <Accordion fx:id="accordi" minWidth="200.0" prefHeight="400.0" prefWidth="200.0">
+        <Accordion fx:id="accordi" minWidth="200.0" prefHeight="400.0" prefWidth="200.0" HBox.hgrow="NEVER">
             <panes>
                 <TitledPane fx:id="hairChoose" minWidth="200.0" text="Hair">
                     <content>
@@ -112,6 +116,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="defaultBrows" fitHeight="100.0" fitWidth="100.0" layoutX="100.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -121,6 +128,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="sadBrows" fitHeight="100.0" fitWidth="100.0" layoutY="100.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -130,6 +140,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                             </children>
                         </AnchorPane>
@@ -149,6 +162,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="defaultEyes" fitHeight="100.0" fitWidth="100.0" layoutX="99.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -158,6 +174,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="wideEyes" fitHeight="100.0" fitWidth="100.0" layoutY="100.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -167,6 +186,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="200.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                             </children>
                         </AnchorPane>
@@ -184,6 +206,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="300.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="sadMouth" fitHeight="100.0" fitWidth="100.0" layoutX="100.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -193,6 +218,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="300.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                                 <ImageView fx:id="seriousMouth" fitHeight="100.0" fitWidth="100.0" layoutY="100.0"
                                            pickOnBounds="true" preserveRatio="true">
@@ -202,6 +230,9 @@
                                     <cursor>
                                         <Cursor fx:constant="HAND"/>
                                     </cursor>
+                                    <viewport>
+                                        <Rectangle2D height="400.0" minX="200.0" minY="300.0" width="400.0"/>
+                                    </viewport>
                                 </ImageView>
                             </children>
                         </AnchorPane>
@@ -211,50 +242,50 @@
         </Accordion>
         <StackPane fx:id="midPane" maxWidth="9999.0" minHeight="400.0" minWidth="400.0" HBox.hgrow="ALWAYS">
             <children>
-                <ImageView fx:id="skin" fitHeight="300.0" fitWidth="300.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../resources/skin/skin_light.png"/>
-                    </image>
-                </ImageView>
-                <ImageView fx:id="brows" fitHeight="300.0" fitWidth="300.0" layoutX="60.0" layoutY="60.0"
-                           preserveRatio="true">
-                    <image>
-                        <Image url="@../resources/brows/brows_default.png"/>
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </ImageView>
-                <ImageView fx:id="eyes" fitHeight="300.0" fitWidth="300.0" layoutX="60.0" layoutY="60.0"
-                           preserveRatio="true">
-                    <image>
-                        <Image url="@../resources/eyes/eyes_default.png"/>
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </ImageView>
-                <ImageView fx:id="nose" fitHeight="300.0" fitWidth="678.0" layoutX="60.0" layoutY="60.0"
-                           preserveRatio="true">
-                    <image>
-                        <Image url="@../resources/nose_default.png"/>
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </ImageView>
-                <ImageView fx:id="mouth" fitHeight="300.0" fitWidth="300.0" layoutX="60.0" layoutY="60.0"
-                           preserveRatio="true">
-                    <image>
-                        <Image url="@../resources/mouth/mouth_default.png"/>
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </ImageView>
+                <Group fx:id="previewgroup">
+                    <children>
+                        <ImageView fx:id="skin" fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/skin/skin_light.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fx:id="brows" fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/brows/brows_default.png"/>
+                            </image>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </ImageView>
+                        <ImageView fx:id="eyes" fitHeight="200.0" fitWidth="315.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/eyes/eyes_default.png"/>
+                            </image>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </ImageView>
+                        <ImageView fx:id="nose" fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/nose_default.png"/>
+                            </image>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </ImageView>
+                        <ImageView fx:id="mouth" fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/mouth/mouth_default.png"/>
+                            </image>
+                            <cursor>
+                                <Cursor fx:constant="HAND"/>
+                            </cursor>
+                        </ImageView>
+                    </children>
+                </Group>
             </children>
         </StackPane>
-        <AnchorPane fx:id="cmdPane" minWidth="200.0" prefWidth="200.0">
+        <AnchorPane fx:id="cmdPane" minWidth="200.0" prefWidth="200.0" HBox.hgrow="NEVER">
             <children>
                 <ColorPicker fx:id="colorPicker" layoutX="27.0" layoutY="84.0" visible="false"/>
                 <Button fx:id="savePNGButton" layoutX="56.0" layoutY="359.0" mnemonicParsing="false" text="Save as PNG"
