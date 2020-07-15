@@ -1,8 +1,6 @@
-package svgloader;
+package AvatarMaker;
 
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import org.w3c.dom.Document;
