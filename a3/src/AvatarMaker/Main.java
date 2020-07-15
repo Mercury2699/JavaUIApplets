@@ -1,8 +1,12 @@
 package AvatarMaker;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Main extends Application {
     Controller c;
@@ -11,7 +15,14 @@ public class Main extends Application {
     public void start(Stage s) {
         Model m = new Model();
         c = new Controller(m, s);
-        Scene Main = c.getViewer();
+        Pane rootpane = null;
+        try {
+            rootpane = FXMLLoader.load(getClass().getResource("/AvatarMaker/Viewer.fxml"));
+        } catch (IOException e) {
+            System.err.println(e);
+            System.exit(1);
+        }
+        Scene Main = new Scene(rootpane);
         s.setScene(Main);
         s.setHeight(800);
         s.setWidth(1200);
