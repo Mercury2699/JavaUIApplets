@@ -3,7 +3,7 @@ package AvatarMaker;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,16 +13,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage s) {
-        Model m = new Model();
-        c = new Controller(m, s);
-        Pane rootpane = null;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AvatarMaker/Viewer.fxml"));
+        HBox roothbox = null;
         try {
-            rootpane = FXMLLoader.load(getClass().getResource("/AvatarMaker/Viewer.fxml"));
+            roothbox = loader.load();
+            c = loader.getController();
         } catch (IOException e) {
             System.err.println(e);
             System.exit(1);
         }
-        Scene Main = new Scene(rootpane);
+        Scene Main = new Scene(roothbox);
         s.setScene(Main);
         s.setHeight(800);
         s.setWidth(1200);

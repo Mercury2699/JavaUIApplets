@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 
 public class Controller {
-    Model m;
+    Model m = new Model();
     Stage s;
     SVGLoader svgLoader = new SVGLoader();
     Group hair = svgLoader.loadSVG("hair/hair_curly.svg");
@@ -24,13 +24,54 @@ public class Controller {
     @FXML
     ImageView brows;
     @FXML
+    ImageView skin;
+    @FXML
+    ImageView eyes;
+    @FXML
+    ImageView mouth;
+    @FXML
     Group previewgroup;
+
+    @FXML
+    Button savePNGButton;
+
+    // Accordion Selects
     @FXML
     ImageView defaultBrows;
     @FXML
-    Button savePNGButton;
-    @FXML
     ImageView sadBrows;
+    @FXML
+    ImageView angryBrows;
+
+    @FXML
+    ImageView longHair;
+    @FXML
+    ImageView curlyHair;
+    @FXML
+    ImageView shortHair;
+    @FXML
+    ImageView wavyHair;
+
+    @FXML
+    ImageView defaultMouth;
+    @FXML
+    ImageView sadMouth;
+    @FXML
+    ImageView seriousMouth;
+
+    @FXML
+    ImageView brownSkin;
+    @FXML
+    ImageView lightSkin;
+    @FXML
+    ImageView lighterSkin;
+
+    @FXML
+    ImageView closedEyes;
+    @FXML
+    ImageView defaultEyes;
+    @FXML
+    ImageView wideEyes;
 
     @FXML
     public void initialize() {
@@ -39,21 +80,80 @@ public class Controller {
         savePNGButton.setOnMouseClicked(mouseEvent -> savePNG());
         defaultBrows.setOnMouseClicked(mouseEvent -> setBrow(Brows.Default));
         sadBrows.setOnMouseClicked(mouseEvent -> setBrow(Brows.Sad));
-//        ImageView angryBrowsImgView = (ImageView) Viewer.lookup("#angryBrows");
-//        angryBrowsImgView.setOnMouseClicked(mouseEvent -> setBrow(Brows.Angry));
-//        ImageView longHairImgView = (ImageView) Viewer.lookup("#longHair");
-//        longHairImgView.setOnMouseClicked(mouseEvent -> setHair(Hair.Long));
-//        ImageView curlyHairImgView = (ImageView) Viewer.lookup("#curlyHair");
-//        curlyHairImgView.setOnMouseClicked(mouseEvent -> setHair(Hair.Curly));
-//        ImageView shortHairImgView = (ImageView) Viewer.lookup("#shortHair");
-//        shortHairImgView.setOnMouseClicked(mouseEvent -> setHair(Hair.Short));
-//        ImageView wavyHairImgView = (ImageView) Viewer.lookup("#wavyHair");
-//        wavyHairImgView.setOnMouseClicked(mouseEvent -> setHair(Hair.Wavy));
+        angryBrows.setOnMouseClicked(mouseEvent -> setBrow(Brows.Angry));
+        longHair.setOnMouseClicked(mouseEvent -> setHair(Hair.Long));
+        curlyHair.setOnMouseClicked(mouseEvent -> setHair(Hair.Curly));
+        shortHair.setOnMouseClicked(mouseEvent -> setHair(Hair.Short));
+        wavyHair.setOnMouseClicked(mouseEvent -> setHair(Hair.Wavy));
+        brownSkin.setOnMouseClicked(mouseEvent -> setSkin(Skin.Brown));
+        lightSkin.setOnMouseClicked(mouseEvent -> setSkin(Skin.Light));
+        lighterSkin.setOnMouseClicked(mouseEvent -> setSkin(Skin.Lighter));
+        defaultMouth.setOnMouseClicked(mouseEvent -> setMouth(Mouth.Default));
+        sadMouth.setOnMouseClicked(mouseEvent -> setMouth(Mouth.Sad));
+        seriousMouth.setOnMouseClicked(mouseEvent -> setMouth(Mouth.Serious));
+        closedEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Closed));
+        defaultEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Default));
+        wideEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Wide));
     }
 
-    public Controller(Model model, Stage stage) {
-        m = model;
-        s = stage;
+    public void setEyes(Eyes e) {
+        m.setEyes(e);
+        Image newEyes;
+        switch (e) {
+            case Default:
+                newEyes = new Image("/eyes/eyes_default.png");
+                break;
+            case Wide:
+                newEyes = new Image("/eyes/eyes_wide.png");
+                break;
+            case Closed:
+                newEyes = new Image("/eyes/eyes_closed.png");
+                break;
+            default:
+                newEyes = null;
+                System.exit(1);
+        }
+        eyes.setImage(newEyes);
+    }
+
+    public void setMouth(Mouth mou) {
+        m.setMouth(mou);
+        Image newMouth;
+        switch (mou) {
+            case Sad:
+                newMouth = new Image("/mouth/mouth_sad.png");
+                break;
+            case Default:
+                newMouth = new Image("/mouth/mouth_default.png");
+                break;
+            case Serious:
+                newMouth = new Image("/mouth/mouth_serious.png");
+                break;
+            default:
+                newMouth = null;
+                System.exit(1);
+        }
+        mouth.setImage(newMouth);
+    }
+
+    public void setSkin(Skin s) {
+        m.setSkin(s);
+        Image newSkin;
+        switch (s) {
+            case Brown:
+                newSkin = new Image("/skin/skin_brown.png");
+                break;
+            case Light:
+                newSkin = new Image("/skin/skin_light.png");
+                break;
+            case Lighter:
+                newSkin = new Image("/skin/skin_lighter.png");
+                break;
+            default:
+                newSkin = null;
+                System.exit(1);
+        }
+        skin.setImage(newSkin);
     }
 
     public void setBrow(Brows b) {
@@ -78,6 +178,7 @@ public class Controller {
 
     public void setHair(Hair h) {
         m.setHair(h);
+        previewgroup.getChildren().remove(hair);
         switch (h) {
             case Long:
                 hair = svgLoader.loadSVG("hair/hair_long.svg");
@@ -94,6 +195,7 @@ public class Controller {
             default:
                 System.exit(1);
         }
+        previewgroup.getChildren().add(hair);
     }
 
     public void savePNG() {
