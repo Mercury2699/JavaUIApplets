@@ -7,9 +7,11 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
@@ -28,6 +30,7 @@ public class Controller {
 
     FileChooser fileChooser = new FileChooser();
     DropShadow ds = new DropShadow(5, Color.BLUE);
+    InnerShadow is = new InnerShadow(5, Color.BLUE);
     Node currentlySelected;
 
     @FXML
@@ -37,7 +40,12 @@ public class Controller {
     @FXML
     ImageView eyes;
     @FXML
+    ImageView nose;
+    @FXML
     ImageView mouth;
+
+    @FXML
+    StackPane midPane;
     @FXML
     Group previewgroup;
 
@@ -114,25 +122,51 @@ public class Controller {
         closedEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Closed));
         defaultEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Default));
         wideEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Wide));
+        skin.setOnMouseClicked(mouseEvent -> {
+            hideAllWidgets();
+            mouseEvent.consume();
+        });
+        mouth.setOnMouseClicked(mouseEvent -> {
+            hideAllWidgets();
+            mouseEvent.consume();
+        });
+        nose.setOnMouseClicked(mouseEvent -> {
+            hideAllWidgets();
+            mouseEvent.consume();
+        });
+        midPane.setOnMouseClicked(mouseEvent -> {
+            hideAllWidgets();
+            mouseEvent.consume();
+        });
         brows.setOnMouseEntered(MouseEvent -> brows.setEffect(ds));
-        brows.setOnMouseExited(MouseEvent -> brows.setEffect(null));
+        brows.setOnMouseExited(MouseEvent -> {
+            if (currentlySelected != brows) brows.setEffect(null);
+        });
         eyes.setOnMouseEntered(MouseEvent -> eyes.setEffect(ds));
-        eyes.setOnMouseExited(MouseEvent -> eyes.setEffect(null));
+        eyes.setOnMouseExited(MouseEvent -> {
+            if (currentlySelected != eyes) eyes.setEffect(null);
+        });
         colorPicker.setOnAction(Event -> ((SVGPath) currentlySelected).setFill(colorPicker.getValue()));
         eyes.setOnMouseClicked(MouseEvent -> {
+            hideAllWidgets();
             currentlySelected = eyes;
+            eyes.setEffect(ds);
             slider.setVisible(true);
             sliderLabel.setVisible(true);
+            MouseEvent.consume();
         });
         slider.valueProperty().addListener(ChangeListener -> {
             eyes.setScaleX(slider.getValue());
             eyes.setScaleY(slider.getValue());
         });
         brows.setOnMouseClicked(MouseEvent -> {
+            hideAllWidgets();
             currentlySelected = brows;
+            brows.setEffect(ds);
             spinner.setVisible(true);
             spinnerLabel.setVisible(true);
             spinner.setValueFactory(m.browOffset);
+            MouseEvent.consume();
         });
         spinner.valueProperty().addListener(ChangeListener -> {
             int value = (Integer) spinner.getValueFactory().getValue();
@@ -147,22 +181,39 @@ public class Controller {
             brows.setLayoutY(-value);
 //            brows.setTranslateY(-value);
         });
-        for (Node path : hair.getChildren()) {
-            path.setOnMouseClicked(MouseEvent -> {
-                currentlySelected = path;
-                SVGPath svg = (SVGPath) path;
-                colorPicker.setVisible(true);
-                colorPicker.setValue((Color) svg.getFill());
-            });
-        }
+        SVGPathOnClick(hair);
+        SVGPathOnClick(clothes);
+    }
+
+    private void SVGPathOnClick(Group clothes) {
         for (Node path : clothes.getChildren()) {
             path.setOnMouseClicked(MouseEvent -> {
+                hideAllWidgets();
                 currentlySelected = path;
+                path.setEffect(is);
                 SVGPath svg = (SVGPath) path;
                 colorPicker.setVisible(true);
                 colorPicker.setValue((Color) svg.getFill());
+                MouseEvent.consume();
+            });
+            path.setOnMouseExited(MouseEvent -> {
+                if (currentlySelected != path) {
+                    path.setEffect(null);
+                }
             });
         }
+    }
+
+    public void hideAllWidgets() {
+        if (currentlySelected != null) {
+            currentlySelected.setEffect(null);
+            currentlySelected = null;
+        }
+        colorPicker.setVisible(false);
+        spinner.setVisible(false);
+        spinnerLabel.setVisible(false);
+        slider.setVisible(false);
+        sliderLabel.setVisible(false);
     }
 
     public void setEyes(Eyes e) {
@@ -183,6 +234,7 @@ public class Controller {
                 System.exit(1);
         }
         eyes.setImage(newEyes);
+        hideAllWidgets();
     }
 
     public void setMouth(Mouth mou) {
@@ -203,6 +255,7 @@ public class Controller {
                 System.exit(1);
         }
         mouth.setImage(newMouth);
+        hideAllWidgets();
     }
 
     public void setSkin(Skin s) {
@@ -223,6 +276,7 @@ public class Controller {
                 System.exit(1);
         }
         skin.setImage(newSkin);
+        hideAllWidgets();
     }
 
     public void setBrow(Brows b) {
@@ -243,6 +297,7 @@ public class Controller {
                 System.exit(1);
         }
         brows.setImage(newBrow);
+        hideAllWidgets();
     }
 
     public void setHair(Hair h) {
@@ -265,6 +320,8 @@ public class Controller {
                 System.exit(1);
         }
         previewgroup.getChildren().add(hair);
+        SVGPathOnClick(hair);
+        hideAllWidgets();
     }
 
     public void savePNG() {

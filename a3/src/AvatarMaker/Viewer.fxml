@@ -287,7 +287,7 @@
         </StackPane>
         <AnchorPane fx:id="cmdPane" minWidth="200.0" prefWidth="200.0" HBox.hgrow="NEVER">
             <children>
-                <ColorPicker fx:id="colorPicker" layoutX="27.0" layoutY="84.0" visible="false"/>
+                <ColorPicker fx:id="colorPicker" layoutX="27.0" layoutY="150.0" visible="false"/>
                 <Button fx:id="savePNGButton" layoutX="56.0" layoutY="359.0" mnemonicParsing="false" text="Save as PNG"
                         AnchorPane.bottomAnchor="10.0"/>
                 <Button fx:id="loadAvatarButton" layoutX="59.0" layoutY="272.0" mnemonicParsing="false"
@@ -301,8 +301,8 @@
                        AnchorPane.topAnchor="10.0"/>
                 <Label fx:id="sliderLabel" layoutX="10.0" layoutY="50.0" prefHeight="27.0" prefWidth="89.0"
                        text="Eyes scale: " visible="false"/>
-                <Slider fx:id="slider" blockIncrement="0.1" layoutX="31.0" layoutY="103.0" majorTickUnit="0.5" max="1.5"
-                        min="0.5" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="1.0"
+                <Slider fx:id="slider" blockIncrement="0.05" layoutX="31.0" layoutY="103.0" majorTickUnit="0.1"
+                        max="1.2" min="0.8" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="1.0"
                         visible="false"/>
             </children>
         </AnchorPane>

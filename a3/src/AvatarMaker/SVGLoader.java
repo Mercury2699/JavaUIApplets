@@ -33,7 +33,6 @@ public class SVGLoader {
                 svgPath.setContent(path);
                 svgPath.setCursor(Cursor.HAND);
                 svgPath.setOnMouseEntered(MouseEvent -> svgPath.setEffect(ds));
-                svgPath.setOnMouseExited(MouseEvent -> svgPath.setEffect(null));
                 svgPath.setFill(Color.color(Math.random(), Math.random(), Math.random()));
                 container.getChildren().add(svgPath);
             }
