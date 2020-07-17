@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.SVGPath?>
 
 <HBox fx:id="roothbox" minHeight="400.0" minWidth="800.0" prefHeight="400.0" prefWidth="800.0"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
@@ -244,6 +245,9 @@
             <children>
                 <Group fx:id="previewgroup">
                     <children>
+                        <SVGPath fx:id="background"
+                                 content="M 200 200 L 200 0 L 0 0 L 0 200M 200 200 L 200 0 L 0 0 L 0 200"
+                                 fill="TRANSPARENT"/>
                         <ImageView fx:id="skin" fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
                             <image>
                                 <Image url="@../resources/skin/skin_light.png"/>
@@ -290,10 +294,6 @@
                 <ColorPicker fx:id="colorPicker" layoutX="27.0" layoutY="150.0" visible="false"/>
                 <Button fx:id="savePNGButton" layoutX="56.0" layoutY="359.0" mnemonicParsing="false" text="Save as PNG"
                         AnchorPane.bottomAnchor="10.0"/>
-                <Button fx:id="loadAvatarButton" layoutX="59.0" layoutY="272.0" mnemonicParsing="false"
-                        text="Load Avatar" AnchorPane.bottomAnchor="90.0"/>
-                <Button fx:id="saveAvatarButton" layoutX="59.0" layoutY="320.0" mnemonicParsing="false"
-                        text="Save Avatar" AnchorPane.bottomAnchor="50.0"/>
                 <Spinner fx:id="spinner" editable="true" layoutX="103.0" layoutY="14.0" prefHeight="27.0"
                          prefWidth="84.0" visible="false" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
                 <Label fx:id="spinnerLabel" layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="89.0"

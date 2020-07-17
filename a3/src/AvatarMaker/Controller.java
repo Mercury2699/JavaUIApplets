@@ -2,6 +2,7 @@ package AvatarMaker;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -33,6 +34,8 @@ public class Controller {
     InnerShadow is = new InnerShadow(5, Color.BLUE);
     Node currentlySelected;
 
+    @FXML
+    SVGPath background;
     @FXML
     ImageView brows;
     @FXML
@@ -122,6 +125,20 @@ public class Controller {
         closedEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Closed));
         defaultEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Default));
         wideEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Wide));
+        background.setCursor(Cursor.HAND);
+        background.setOnMouseEntered(MouseEvent -> background.setEffect(is));
+        background.setOnMouseClicked(MouseEvent -> {
+            hideAllWidgets();
+            currentlySelected = background;
+            background.setEffect(is);
+            SVGPath svg = (SVGPath) background;
+            colorPicker.setVisible(true);
+            colorPicker.setValue((Color) svg.getFill());
+            MouseEvent.consume();
+        });
+        background.setOnMouseExited(MouseEvent -> {
+            if (currentlySelected != background) background.setEffect(null);
+        });
         skin.setOnMouseClicked(mouseEvent -> {
             hideAllWidgets();
             mouseEvent.consume();
@@ -325,7 +342,9 @@ public class Controller {
     }
 
     public void savePNG() {
-        WritableImage save = previewgroup.snapshot(new SnapshotParameters(), null);
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
+        WritableImage save = previewgroup.snapshot(sp, null);
         FileChooser.ExtensionFilter extFltr = new FileChooser.ExtensionFilter("image files (*.png)", "*.png");
         fileChooser.getExtensionFilters().add(extFltr);
         fileChooser.setInitialFileName("Avatar.png");
