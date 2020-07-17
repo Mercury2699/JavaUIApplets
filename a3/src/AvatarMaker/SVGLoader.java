@@ -2,6 +2,7 @@ package AvatarMaker;
 
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import org.w3c.dom.Document;
@@ -15,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SVGLoader {
+    InnerShadow ds = new InnerShadow(5, Color.BLUE);
+
     public Group loadSVG(String svgFileName) {
         Group container = new Group();
         for (String path : getPaths(svgFileName)) {
@@ -29,6 +32,8 @@ public class SVGLoader {
                 SVGPath svgPath = new SVGPath();
                 svgPath.setContent(path);
                 svgPath.setCursor(Cursor.HAND);
+                svgPath.setOnMouseEntered(MouseEvent -> svgPath.setEffect(ds));
+                svgPath.setOnMouseExited(MouseEvent -> svgPath.setEffect(null));
                 svgPath.setFill(Color.color(Math.random(), Math.random(), Math.random()));
                 container.getChildren().add(svgPath);
             }
@@ -55,7 +60,6 @@ public class SVGLoader {
             for (int x = 0, size = nodeList.getLength(); x < size; x++) {
                 paths.add(nodeList.item(x).getAttributes().getNamedItem("transform").getNodeValue().toString());
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

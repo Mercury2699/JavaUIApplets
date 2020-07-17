@@ -1,5 +1,7 @@
 package AvatarMaker;
 
+import javafx.scene.control.SpinnerValueFactory;
+
 enum Hair {Curly, Long, Short, Wavy};
 
 enum Brows {Angry, Default, Sad};
@@ -16,6 +18,8 @@ public class Model {
     Skin skin = Skin.Light;
     Eyes eyes = Eyes.Default;
     Mouth mouth = Mouth.Default;
+
+    public SpinnerValueFactory.IntegerSpinnerValueFactory browOffset = new SpinnerValueFactory.IntegerSpinnerValueFactory(-8, 8, 0);
 
     public void setHair(Hair h) {
         hair = h;

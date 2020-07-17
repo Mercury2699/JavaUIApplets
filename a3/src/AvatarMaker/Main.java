@@ -24,6 +24,7 @@ public class Main extends Application {
         }
         Scene Main = new Scene(roothbox);
         s.setScene(Main);
+        s.setTitle("Avatar Maker by Junjie He");
         s.setHeight(800);
         s.setWidth(1200);
         s.setMinWidth(800);

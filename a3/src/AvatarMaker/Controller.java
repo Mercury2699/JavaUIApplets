@@ -3,11 +3,15 @@ package AvatarMaker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -18,9 +22,14 @@ public class Controller {
     Model m = new Model();
     Stage s;
     SVGLoader svgLoader = new SVGLoader();
+
     Group hair = svgLoader.loadSVG("hair/hair_curly.svg");
     Group clothes = svgLoader.loadSVG("clothes.svg");
+
     FileChooser fileChooser = new FileChooser();
+    DropShadow ds = new DropShadow(5, Color.BLUE);
+    Node currentlySelected;
+
     @FXML
     ImageView brows;
     @FXML
@@ -74,6 +83,17 @@ public class Controller {
     ImageView wideEyes;
 
     @FXML
+    ColorPicker colorPicker;
+    @FXML
+    Spinner spinner;
+    @FXML
+    Label spinnerLabel;
+    @FXML
+    Slider slider;
+    @FXML
+    Label sliderLabel;
+
+    @FXML
     public void initialize() {
         previewgroup.getChildren().add(clothes);
         previewgroup.getChildren().add(hair);
@@ -94,6 +114,55 @@ public class Controller {
         closedEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Closed));
         defaultEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Default));
         wideEyes.setOnMouseClicked(mouseEvent -> setEyes(Eyes.Wide));
+        brows.setOnMouseEntered(MouseEvent -> brows.setEffect(ds));
+        brows.setOnMouseExited(MouseEvent -> brows.setEffect(null));
+        eyes.setOnMouseEntered(MouseEvent -> eyes.setEffect(ds));
+        eyes.setOnMouseExited(MouseEvent -> eyes.setEffect(null));
+        colorPicker.setOnAction(Event -> ((SVGPath) currentlySelected).setFill(colorPicker.getValue()));
+        eyes.setOnMouseClicked(MouseEvent -> {
+            currentlySelected = eyes;
+            slider.setVisible(true);
+            sliderLabel.setVisible(true);
+        });
+        slider.valueProperty().addListener(ChangeListener -> {
+            eyes.setScaleX(slider.getValue());
+            eyes.setScaleY(slider.getValue());
+        });
+        brows.setOnMouseClicked(MouseEvent -> {
+            currentlySelected = brows;
+            spinner.setVisible(true);
+            spinnerLabel.setVisible(true);
+            spinner.setValueFactory(m.browOffset);
+        });
+        spinner.valueProperty().addListener(ChangeListener -> {
+            int value = (Integer) spinner.getValueFactory().getValue();
+//            Rectangle2D viewportRect;
+//            if(value < 0){
+//                viewportRect = new Rectangle2D(0, 0, 200, 200+value);
+//            } else {
+//                viewportRect = new Rectangle2D(0, -value, 200, 200);
+//            }
+//            brows.setViewport(viewportRect);
+//            brows.setY(-value);
+            brows.setLayoutY(-value);
+//            brows.setTranslateY(-value);
+        });
+        for (Node path : hair.getChildren()) {
+            path.setOnMouseClicked(MouseEvent -> {
+                currentlySelected = path;
+                SVGPath svg = (SVGPath) path;
+                colorPicker.setVisible(true);
+                colorPicker.setValue((Color) svg.getFill());
+            });
+        }
+        for (Node path : clothes.getChildren()) {
+            path.setOnMouseClicked(MouseEvent -> {
+                currentlySelected = path;
+                SVGPath svg = (SVGPath) path;
+                colorPicker.setVisible(true);
+                colorPicker.setValue((Color) svg.getFill());
+            });
+        }
     }
 
     public void setEyes(Eyes e) {
