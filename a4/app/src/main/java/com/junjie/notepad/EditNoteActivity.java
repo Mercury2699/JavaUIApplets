@@ -26,21 +26,7 @@ public class EditNoteActivity extends AppCompatActivity {
         AppCompatImageButton saveButton = findViewById(R.id.saveButton);
         titleBar.setText(editing.title);
         noteField.setText(editing.text);
-        saveButton.setOnClickListener(view -> {
-            returnNoteIntent();
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        returnNoteIntent();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        returnNoteIntent();
+        saveButton.setOnClickListener(view -> returnNoteIntent());
     }
 
     @Override

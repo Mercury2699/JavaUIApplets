@@ -78,9 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
                 }
             }
         }
-        adapter = new RecyclerViewAdapter(this, m.notes);
         adapter.notifyDataSetChanged();
-        adapter.setListener(this);
     }
 
     @Override
@@ -107,8 +105,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     @Override
     public void onDeleteClick(Note note) {
         m.notes.remove(note);
-        adapter = new RecyclerViewAdapter(this, m.notes);
         adapter.notifyDataSetChanged();
-        adapter.setListener(this);
     }
 }

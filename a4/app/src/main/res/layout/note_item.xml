@@ -3,7 +3,8 @@
 												   xmlns:app="http://schemas.android.com/apk/res-auto"
 												   xmlns:tools="http://schemas.android.com/tools"
 												   android:layout_width="match_parent"
-												   android:layout_height="wrap_content">
+												   android:layout_height="wrap_content"
+												   android:background="?android:attr/selectableItemBackground">
 	<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="0dp"
@@ -14,6 +15,7 @@
 			app:layout_constraintTop_toTopOf="parent"
 			android:id="@+id/linearLayout"
 			app:layout_constraintEnd_toStartOf="@+id/deleteIcon"
+			android:background="?android:attr/selectableItemBackground"
 			android:layout_marginStart="8dp">
 
 		<TextView android:layout_width="match_parent"
@@ -37,6 +39,7 @@
 			android:focusable="true"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/linearLayout"
+			android:background="?android:attr/selectableItemBackground"
 			app:layout_constraintHorizontal_bias="0.51"
 			app:layout_constraintTop_toTopOf="parent" android:contentDescription="@string/delete"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
