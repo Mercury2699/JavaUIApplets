@@ -38,6 +38,11 @@ public class EditNoteActivity extends AppCompatActivity {
         returnNoteIntent();
     }
 
+    @Override
+    public void onBackPressed() {
+        returnNoteIntent();
+        finish();
+    }
 
     private void returnNoteIntent() {
         editing.title = titleBar.getText().toString();

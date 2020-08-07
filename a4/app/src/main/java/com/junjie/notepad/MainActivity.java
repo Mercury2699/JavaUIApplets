@@ -16,7 +16,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.NoteEventListener {
     Model m;
     Note editing;
-    private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     Intent noteIntent = new Intent();
 
@@ -49,14 +48,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         }
         adapter = new RecyclerViewAdapter(this, m.notes);
         adapter.setListener(this);
-        recyclerView = findViewById(R.id.notes_list);
+        RecyclerView recyclerView = findViewById(R.id.notes_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        LinearLayoutManager l =new LinearLayoutManager(this);
-        l.setReverseLayout(true);
-        l.setStackFromEnd(true);
-        l.scrollToPosition(2147483647);
-        recyclerView.setLayoutManager(l);
+        LinearLayoutManager l = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (l != null) {
+            l.setReverseLayout(true);
+            l.setStackFromEnd(true);
+            l.scrollToPosition(2147483647);
+        }
     }
 
     @Override
