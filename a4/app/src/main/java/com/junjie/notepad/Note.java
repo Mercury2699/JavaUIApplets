@@ -1,8 +1,9 @@
 package com.junjie.notepad;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Note implements Comparable<Date> {
+public class Note implements Serializable ,Comparable<Date> {
     Date creationTime;
     String title;
     String text;

@@ -1,29 +1,33 @@
 package com.junjie.notepad;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.AppCompatImageButton;
+
+import java.util.Date;
 
 public class EditNoteActivity extends AppCompatActivity {
     private Note editing;
-    private Button saveButton;
-
+    private EditText titleBar;
+    private EditText noteField;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        saveButton = findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(view -> setContentView(R.layout.activity_main));
-        setSupportActionBar(toolbar);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setContentView(R.layout.activity_main);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+        editing = (Note) extras.getSerializable("Note");
+        setContentView(R.layout.activity_edit_note);
+        titleBar = findViewById(R.id.titleField);
+        noteField = findViewById(R.id.noteField);
+        Toolbar editToolbar = findViewById(R.id.editToolbar);
+        setSupportActionBar(editToolbar);
+        AppCompatImageButton saveButton = findViewById(R.id.saveButton);
+        titleBar.setText(editing.title);
+        noteField.setText(editing.text);
+        saveButton.setOnClickListener(view -> finish());
     }
 }

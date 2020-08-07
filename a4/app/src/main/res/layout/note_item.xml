@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+												   xmlns:app="http://schemas.android.com/apk/res-auto"
+												   xmlns:tools="http://schemas.android.com/tools"
+												   android:layout_width="match_parent"
+												   android:layout_height="match_parent">
+	<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:clickable="true"
+			android:focusable="true"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:id="@+id/linearLayout"
+			app:layout_constraintEnd_toStartOf="@+id/imageView"
+			android:layout_marginStart="8dp">
+
+		<TextView android:layout_width="match_parent"
+				  android:id="@+id/note_title"
+				  android:text="@string/title"
+				  android:layout_height="wrap_content"
+				  android:textSize="30sp"/>
+		<TextView android:layout_width="match_parent"
+				  android:id="@+id/note_text"
+				  android:text="@string/text_here"
+				  android:layout_height="wrap_content"
+				  android:textSize="18sp"/>
+
+	</LinearLayout>
+	<ImageView
+			android:layout_width="65dp"
+			android:layout_height="65dp"
+			app:srcCompat="@android:drawable/ic_menu_delete"
+			android:id="@+id/imageView"
+			android:clickable="true"
+			android:focusable="true"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/linearLayout"
+			app:layout_constraintHorizontal_bias="0.51"
+			app:layout_constraintTop_toTopOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
