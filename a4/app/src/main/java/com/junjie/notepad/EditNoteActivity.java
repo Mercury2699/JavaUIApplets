@@ -36,14 +36,8 @@ public class EditNoteActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         returnNoteIntent();
-        finish();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        finish();
-    }
 
     private void returnNoteIntent() {
         editing.title = titleBar.getText().toString();

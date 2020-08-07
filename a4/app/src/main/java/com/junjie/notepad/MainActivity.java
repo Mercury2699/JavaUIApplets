@@ -52,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         recyclerView = findViewById(R.id.notes_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        LinearLayoutManager l =new LinearLayoutManager(this);
+        l.setReverseLayout(true);
+        l.setStackFromEnd(true);
+        l.scrollToPosition(2147483647);
+        recyclerView.setLayoutManager(l);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     @Override
     protected void onStop() {
         super.onStop();
-        try (FileOutputStream fos = this.openFileOutput("notes.bin", Context.MODE_PRIVATE)) {
+        try (FileOutputStream fos = openFileOutput("notes.bin", Context.MODE_PRIVATE)) {
             m.save(fos);
         } catch (IOException e) {
             e.printStackTrace();

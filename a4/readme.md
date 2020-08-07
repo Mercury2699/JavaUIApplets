@@ -24,4 +24,6 @@ https://developer.android.com/reference/java/io/Serializable \
 https://developer.android.com/reference/java/io/ObjectOutput \
 https://developer.android.com/reference/java/io/ObjectInput \
 https://developer.android.com/guide/topics/ui/look-and-feel/darktheme \
-Implemented self-adapt dark theme, only works on API 29 or later. \
+Implemented auto-adapt dark theme, only works on API 29 or later. \
+This app is targeting API 29 with minimum API29.\
+https://stackoverflow.com/questions/46168245/recyclerview-reverse-order \

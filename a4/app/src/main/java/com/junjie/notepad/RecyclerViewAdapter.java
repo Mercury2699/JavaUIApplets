@@ -2,21 +2,23 @@ package com.junjie.notepad;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NoteHolder> {
     private final Context context;
     private final ArrayList<Note> notes;
     private NoteEventListener listener;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Note> notes) {
-        this.context = context;
-        this.notes = notes;
+    public RecyclerViewAdapter(Context c, ArrayList<Note> n) {
+        context = c;
+        notes = n;
     }
 
     @NonNull
@@ -60,8 +62,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public void setListener(NoteEventListener listener) {
-        this.listener = listener;
+    public void setListener(NoteEventListener l) {
+        listener = l;
     }
 
     public interface NoteEventListener {
