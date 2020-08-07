@@ -2,14 +2,12 @@ package com.junjie.notepad;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NoteHolder> {
     private final Context context;
@@ -49,7 +47,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        if (notes != null){
+            return notes.size();
+        } else {
+            return 0;
+        }
     }
 
     static class NoteHolder extends RecyclerView.ViewHolder {
