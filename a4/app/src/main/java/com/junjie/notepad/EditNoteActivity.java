@@ -26,13 +26,29 @@ public class EditNoteActivity extends AppCompatActivity {
         AppCompatImageButton saveButton = findViewById(R.id.saveButton);
         titleBar.setText(editing.title);
         noteField.setText(editing.text);
-        saveButton.setOnClickListener(view -> returnNoteIntent());
+        saveButton.setOnClickListener(view -> {
+            returnNoteIntent();
+            finish();
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         returnNoteIntent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        returnNoteIntent();
+        finish();
     }
 
     private void returnNoteIntent() {
@@ -44,6 +60,5 @@ public class EditNoteActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("Note", editing);
         setResult(RESULT_OK, intent);
-        finish();
     }
 }
