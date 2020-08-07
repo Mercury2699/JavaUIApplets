@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +15,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.NoteEventListener {
     Model m;
+    Note editing;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     Intent noteIntent = new Intent();
@@ -27,9 +27,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         noteIntent.setClass(this, EditNoteActivity.class);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Note n = new Note(new Date(System.currentTimeMillis()), "", "");
-            m.add(n);
-            noteIntent.putExtra("Note", n);
+            editing = new Note(new Date(System.currentTimeMillis()), "", "");
+            noteIntent.putExtra("Note", editing);
             noteIntent.setAction(Intent.ACTION_CREATE_DOCUMENT);
             startActivityForResult(noteIntent, 0);
         });
@@ -60,22 +59,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                Note edited = (Note) data.getExtras().getSerializable("Note");
-                if (edited.isEmpty()){
-                    System.err.println("Empty note returned ...");
-                    Toast t = Toast.makeText(this, "This note is empty, it is deleted." ,Toast.LENGTH_SHORT);
-                    t.show();
-                    m.notes.remove(edited);
-                } else {
-                    int i = m.notes.indexOf(edited);
-                    System.err.println("Note returned ...");
-                    if (i != -1) {
-                        m.notes.get(i).title = edited.title;
-                        m.notes.get(i).text = edited.text;
+                Note edited = null;
+                if (data != null) {
+                    edited = (Note) data.getExtras().getSerializable("Note");
+                }
+                if (edited != null) {
+                    System.err.println("Receiving edited note...");
+                    System.err.println(edited.title);
+                    System.err.println(edited.text);
+                    if (edited.isEmpty()){
+                        System.err.println("Empty note returned ...");
+                        Toast t = Toast.makeText(this, "This note is empty, it is deleted." ,Toast.LENGTH_SHORT);
+                        t.show();
+                        m.notes.remove(editing);
                     } else {
-                        m.notes.add(edited);
+                        int i = m.notes.indexOf(editing);
+                        System.err.println("Note returned ...");
+                        if (i != -1) {
+                            System.err.println("Modifying existing notes ...");
+                            m.notes.get(i).title = edited.title;
+                            m.notes.get(i).text = edited.text;
+                        } else {
+                            System.err.println("Adding new notes ...");
+                            m.notes.add(edited);
+                        }
                     }
-
                 }
             }
         }
@@ -96,9 +104,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onNoteClick(Note note) {
+        editing = note;
         noteIntent.putExtra("Note", note);
         noteIntent.setAction(Intent.ACTION_EDIT);
-        startActivity(noteIntent);
+        startActivityForResult(noteIntent, 0);
         System.err.println("Editing notes...");
         System.err.println("Notes Array Size: " + m.notes.size());
     }

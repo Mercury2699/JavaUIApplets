@@ -36,18 +36,12 @@ public class EditNoteActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         returnNoteIntent();
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        returnNoteIntent();
         finish();
     }
 
