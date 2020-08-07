@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Model implements Serializable {
-    ArrayList<Note> notes = new ArrayList<Note>();
+    ArrayList<Note> notes;
 
     public void add(Note n){
         notes.add(n);

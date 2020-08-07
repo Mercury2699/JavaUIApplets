@@ -3,6 +3,7 @@ package com.junjie.notepad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.*;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.NoteEventListener {
     Model m;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
@@ -25,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Note n = new Note(new Date(System.currentTimeMillis()), "", "");
+            m.add(n);
             noteIntent.putExtra("Note", n);
             noteIntent.setAction(Intent.ACTION_CREATE_DOCUMENT);
-            startActivity(noteIntent);
+            startActivityForResult(noteIntent, 0);
         });
 
         try{
@@ -35,27 +37,51 @@ public class MainActivity extends AppCompatActivity {
             fis = openFileInput("notes.bin");
             ObjectInputStream is = new ObjectInputStream(fis);
             m = (Model) is.readObject();
+            System.err.println("Loading notes from file...");
+            System.err.println("Notes Array Size: " + m.notes.size());
             is.close();
             fis.close();
         } catch (Error | IOException | ClassNotFoundException e){
             e.printStackTrace();
             m = new Model();
+            System.err.println("Created new notes data structure...");
         }
         adapter = new RecyclerViewAdapter(this, m.notes);
+        adapter.setListener(this);
         recyclerView = findViewById(R.id.notes_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    protected void onDestroy() {
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput("notes.bin", Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                Note edited = (Note) data.getExtras().getSerializable("Note");
+                m.notes.add(edited);
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try (FileOutputStream fos = this.openFileOutput("notes.bin", Context.MODE_PRIVATE)) {
+            m.save(fos);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        m.save(fos);
-        super.onDestroy();
+        System.err.println("Saving notes to file...");
+        System.err.println("Notes Array Size: " + m.notes.size());
+    }
+
+    @Override
+    public void onNoteClick(Note note) {
+        noteIntent.putExtra("Note", note);
+        noteIntent.setAction(Intent.ACTION_EDIT);
+        startActivity(noteIntent);
+        System.err.println("Editing notes...");
+        System.err.println("Notes Array Size: " + m.notes.size());
     }
 }

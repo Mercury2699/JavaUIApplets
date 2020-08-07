@@ -8,9 +8,9 @@ public class Note implements Serializable ,Comparable<Date> {
     String title;
     String text;
 
-    Note(Date d, String titl, String txt){
+    Note(Date d, String t, String txt){
         creationTime = d;
-        title = titl;
+        title = t;
         text = txt;
     }
 

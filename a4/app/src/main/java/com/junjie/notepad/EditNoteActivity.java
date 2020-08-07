@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import java.util.Date;
-
 public class EditNoteActivity extends AppCompatActivity {
     private Note editing;
     private EditText titleBar;
@@ -28,6 +26,26 @@ public class EditNoteActivity extends AppCompatActivity {
         AppCompatImageButton saveButton = findViewById(R.id.saveButton);
         titleBar.setText(editing.title);
         noteField.setText(editing.text);
-        saveButton.setOnClickListener(view -> finish());
+        saveButton.setOnClickListener(view -> {
+            editing.title = titleBar.getText().toString();
+            editing.text = noteField.getText().toString();
+            System.err.println("Transferring note back...");
+            System.err.println(editing.title);
+            System.err.println(editing.text);
+            Intent intent = new Intent();
+            intent.putExtra("Note", editing);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        editing.title = titleBar.getText().toString();
+        editing.text = noteField.getText().toString();
+        System.err.println("Saving notes...");
+        System.err.println(editing.title);
+        System.err.println(editing.text);
     }
 }
