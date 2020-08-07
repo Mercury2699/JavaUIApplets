@@ -27,25 +27,37 @@ public class EditNoteActivity extends AppCompatActivity {
         titleBar.setText(editing.title);
         noteField.setText(editing.text);
         saveButton.setOnClickListener(view -> {
-            editing.title = titleBar.getText().toString();
-            editing.text = noteField.getText().toString();
-            System.err.println("Transferring note back...");
-            System.err.println(editing.title);
-            System.err.println(editing.text);
-            Intent intent = new Intent();
-            intent.putExtra("Note", editing);
-            setResult(RESULT_OK, intent);
-            finish();
+            returnNoteIntent();
         });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        returnNoteIntent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        returnNoteIntent();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        returnNoteIntent();
+    }
+
+    private void returnNoteIntent() {
         editing.title = titleBar.getText().toString();
         editing.text = noteField.getText().toString();
-        System.err.println("Saving notes...");
+        System.err.println("Transferring note back...");
         System.err.println(editing.title);
         System.err.println(editing.text);
+        Intent intent = new Intent();
+        intent.putExtra("Note", editing);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

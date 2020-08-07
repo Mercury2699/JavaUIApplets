@@ -3,6 +3,7 @@ package com.junjie.notepad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,9 +60,27 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 Note edited = (Note) data.getExtras().getSerializable("Note");
-                m.notes.add(edited);
+                if (edited.isEmpty()){
+                    System.err.println("Empty note returned ...");
+                    Toast t = Toast.makeText(this, "This note is empty, it is deleted." ,Toast.LENGTH_SHORT);
+                    t.show();
+                    m.notes.remove(edited);
+                } else {
+                    int i = m.notes.indexOf(edited);
+                    System.err.println("Note returned ...");
+                    if (i != -1) {
+                        m.notes.get(i).title = edited.title;
+                        m.notes.get(i).text = edited.text;
+                    } else {
+                        m.notes.add(edited);
+                    }
+
+                }
             }
         }
+        adapter = new RecyclerViewAdapter(this, m.notes);
+        adapter.notifyDataSetChanged();
+        adapter.setListener(this);
     }
 
     @Override
@@ -83,5 +102,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         startActivity(noteIntent);
         System.err.println("Editing notes...");
         System.err.println("Notes Array Size: " + m.notes.size());
+    }
+
+    @Override
+    public void onDeleteClick(Note note) {
+        m.notes.remove(note);
+        adapter = new RecyclerViewAdapter(this, m.notes);
+        adapter.notifyDataSetChanged();
+        adapter.setListener(this);
     }
 }
